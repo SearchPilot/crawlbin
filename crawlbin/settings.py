@@ -24,7 +24,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['crawlbin.com', 'crawlbin.staging.randd.distilled.net']
+ALLOWED_HOSTS = ['crawlbin.com']
 
 APPEND_SLASH = False
 
