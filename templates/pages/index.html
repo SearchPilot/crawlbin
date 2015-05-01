@@ -1,0 +1,455 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="NBED">
+		<meta name="author" content="Tom and Duncan - Distilled Labs">
+
+		<title>crawlbin by Distilled</title>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+		<link rel="stylesheet" href="/static/crawlbin.css">
+
+		<link rel="icon" href="/static/favicon.ico">
+
+	</head>
+	<body>
+		
+		<div class="jumbotron">
+			<div class="container">
+				<h1>crawlbin</h1>
+				<p><a href="http://crawlbin.com/">crawlbin</a> is designed for testing web crawlers against various search engine directives and HTTP responses.</p>
+				<p>Inspired by <a href="http://httpbin.org/">httpbin</a>.</p>
+			</div>
+		</div>
+
+		<div class="container">
+
+			<div class="row">
+				<div class="col-md-12">
+					
+					<h2>Introduction</h2>
+
+					<p>crawlbin accepts a list of flags in a URL which toggle various search engine directives and HTTP responses within the complete HTML page it returns. You can simulate a variety of issues which crawlers might encounter.</p>
+
+					<p>For example:</p>
+
+					<span class="crawlbin_url"><a href="http://crawlbin.com/response_404/">http://crawlbin.com/response_404/</a><span class="note">HTTP Status: 404 (Not Found)</span></span>
+
+					<span class="crawlbin_url"><a href="http://crawlbin.com/meta_noindex/">http://crawlbin.com/meta_noindex/</a><span class="note">&lt;meta name="robots" content="noindex" /&gt;</span></span>
+
+					<p>You can join flags together with <span class="crawlbin_directive">+</span>:
+
+					<span class="crawlbin_url"><a href="http://crawlbin.com/meta_noindex+meta_nofollow+response_410/">http://crawlbin.com/meta_noindex+meta_nofollow+response_410/</a><span class="note">HTTP Status: 410 (Gone)</span><span class="note">&lt;meta name="robots" content="nofollow noindex" /&gt;</span></span>
+
+					<p>You can create redirects from one block of flags to another with a <span class="crawlbin_directive">/</span>:
+
+					<span class="crawlbin_url"><a href="http://crawlbin.com/canonical_self+vary_user_agent/response_301/">http://crawlbin.com/canonical_self+vary_user_agent/response_301/</a><span class="note">HTTP Status: 301 (Permanent Redirect)</span><span class="second_url">&#8627; <a href="http://crawlbin.com/canonical_self+vary_user_agent/">http://crawlbin.com/canonical_self+vary_user_agent/</a><span class="note">Vary: User-Agent</span><span class="note">&lt;link rel="canonical" href="http://crawlbin.com/canonical_self+vary_user_agent/" /&gt;</span></span></span>
+
+					<p>You can also create randomised requests and requests that target certain user agents:</p>
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/[all:response_404][mobile:response_500][desktop:meta_noindex]/">http://crawlbin.com/[all:response_404][mobile:response_500][desktop:meta_noindex]/</a>
+						<br /><br />
+						<span>Mobile devices:</span>
+						<span class="note">HTTP Status: 500 (Internal Server Error)</span>
+						OR
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+						<br />
+						<span>Desktop devices:</span>
+						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
+						OR
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+						<br />
+						<span>Other devices:</span>
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+		
+					</span>
+					
+					<hr />
+					<h2>Table of Contents</h2>
+
+					<ol>
+						<li><a href="#flag_list">Full List of Flags</a></li>
+						<li><a href="#random">Randomised responses</a></li>
+						<li><a href="#user_agent">User-agent / device determined responses</a></li>
+						<!-- <li><a href="#delay">Delay / timeout options</a></li> -->
+						<li><a href="#faq">FAQ</a></li>
+					</ol>
+
+
+
+					<!-- Flag list Section -->
+
+					<h3><a name="flag_list"></a>Full List of Flags</h3>
+
+					<p>crawlbin can take a variety of flags with various options. Here is the complete list.</p>
+
+					<ol>
+						<li><a href="#response_codes">Response Codes &amp; Redirects</a></li>
+						<li><a href="#noindex_directive">no/index directive</a></li>
+						<li><a href="#nofollow_directive">no/follow directive</a></li>
+						<li><a href="#canonical">canonical directive</a></li>
+						<li><a href="#vary_header">vary header</a></li>
+					</ol>
+
+
+
+					<!-- Response codes -->
+
+					<h4><a name="response_codes"></a>Response Codes &amp; Redirects</h4>
+
+					<p>There are multiple HTTP response codes that are supported. With most response codes other flags will also still work so, for example, it is possible to craft a 404 page that has a canonical HTTP header, and two H1 tags. However, note that for response codes that redirect to a new page, no body content is returned.</p>
+
+					<p>The list of non-redirect response codes supported is:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_400/">http://crawlbin.com/response_400/</a>
+						<span class="note">HTTP Status: 400 (Bad Request)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_401/">http://crawlbin.com/response_401/</a>
+						<span class="note">HTTP Status: 401 (Unauthorized)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_403/">http://crawlbin.com/response_403/</a>
+						<span class="note">HTTP Status: 403 (Forbidden)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_404/">http://crawlbin.com/response_404/</a>
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_410/">http://crawlbin.com/response_410/</a>
+						<span class="note">HTTP Status: 410 (Gone)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_418/">http://crawlbin.com/response_418/</a>
+						<span class="note">HTTP Status: 418 (I'm a teapot)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_500/">http://crawlbin.com/response_500/</a>
+						<span class="note">HTTP Status: 500 (Internal Server Error)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_503/">http://crawlbin.com/response_503/</a>
+						<span class="note">HTTP Status: 503 (Service Unavailable)</span>
+					</span>
+
+
+					<!-- Redirects -->
+
+					<h5>Redirects</h5>
+
+					<p>When a redirect code is returned the associated 'Location' header is set to the next level 'down' of the URL as determined by a delimiting <span class="crawlbin_directive">/</span>:</p>
+
+					<span class="crawlbin_url"><a href="http://crawlbin.com/canonical_self+vary_user_agent/response_301/">http://crawlbin.com/canonical_self+vary_user_agent/response_301/</a><span class="note">HTTP Status: 301 (Permanent Redirect)</span><span class="second_url">&#8627; <a href="http://crawlbin.com/canonical_self+vary_user_agent/">http://crawlbin.com/canonical_self+vary_user_agent/</a><span class="note">Vary: User-Agent</span><span class="note">&lt;link rel="canonical" href="http://crawlbin.com/canonical_self+vary_user_agent/" /&gt;</span></span></span>
+
+					<p>The full list of supported redirect response codes:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_301/">http://crawlbin.com/response_301/</a>
+						<span class="note">HTTP Status: 301 (Moved Permanently)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_302/">http://crawlbin.com/response_302/</a>
+						<span class="note">HTTP Status: 302 (Found)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_303/">http://crawlbin.com/response_303/</a>
+						<span class="note">HTTP Status: 303 (See Other)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_307/">http://crawlbin.com/response_307/</a>
+						<span class="note">HTTP Status: 307 (Temporary Redirect)</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/response_308/">http://crawlbin.com/response_308/</a>
+						<span class="note">HTTP Status: 308 (Permanent Redirect)</span>
+					</span>
+
+
+					<!-- no/index -->
+					<h4><a name="noindex_directive"></a>no/index directive</h4>
+
+					<p>The 'noindex' directive is supported in both meta tag and HTTP header forms:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/meta_noindex/">http://crawlbin.com/meta_noindex/</a>
+						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/header_noindex/">http://crawlbin.com/header_noindex/</a>
+						<span class="note">X-Robots-Tag: noindex</span>
+					</span>
+
+					<p>You can specify both 'index' and 'noindex' as values:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/header_index/">http://crawlbin.com/header_index/</a>
+						<span class="note">X-Robots-Tag: index</span>
+					</span>
+
+					<p>Just like other tags, they can be used together:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/header_noindex+meta_noindex/">http://crawlbin.com/header_noindex+meta_noindex/</a>
+						<span class="note">X-Robots-Tag: noindex</span>
+						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
+					</span>
+
+					<p>Conflicting values are allowed (either across the two forms, or within the same form):</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/header_noindex+header_index+meta_index+meta_noindex/">http://crawlbin.com/header_noindex+header_index+meta_index+meta_noindex/</a>
+						<span class="note">X-Robots-Tag: noindex, index</span>
+						<span class="note">&lt;meta name="robots" content="noindex, index" /&gt;</span>
+					</span>
+
+
+					<!-- no/follow -->
+					<h4><a name="nofollow_directive"></a>no/follow directive</h4>
+
+					<p>The 'nofollow' directive is supported in both meta tag and HTTP header forms, and works similarly to the 'noindex' directive above:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/meta_nofollow/">http://crawlbin.com/meta_nofollow/</a>
+						<span class="note">&lt;meta name="robots" content="nofollow" /&gt;</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/header_follow/">http://crawlbin.com/header_follow/</a>
+						<span class="note">X-Robots-Tag: follow</span>
+					</span>
+
+
+					<!-- h1 tag -->
+					<h4><a name="h1_tag"></a>H1 tags</h4>
+
+					<p>By default crawlbin serves a page with a single H1 header tag in the HTML source. However, there are options to have a page with zero or two H1 tags:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/h1_off/">http://crawlbin.com/h1_off/</a>
+						<span class="note" style="text-decoration: line-through;">&lt;h1&gt;crawlbin&lt;/h1&gt;</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/h1_multiple/">http://crawlbin.com/h1_multiple/</a>
+						<span class="note">&lt;h1&gt;crawlbin&lt;/h1&gt;</span>
+						<span class="note">&lt;h1&gt;Another title&lt;/h1&gt;</span>
+					</span>
+
+					<h4><a name="canonical"></a>Canonical</h4>
+
+					<p>The 'canonical' directive is supported in both meta tag and HTTP header forms. You can specify various values:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/canonical_self/">http://crawlbin.com/canonical_self/</a>
+						<span class="note">Link: &lt;http://crawlbin.com/canonical_self/&gt;; rel="canonical"</span>
+						<span class="note">&lt;link rel="canonical" href="http://crawlbin.com/canonical_self/" /&gt;</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/canonical_home/">http://crawlbin.com/canonical_home/</a>
+						<span class="note">Link: &lt;http://crawlbin.com/&gt;; rel="canonical"</span>
+						<span class="note">&lt;link rel="canonical" href="http://crawlbin.com/" /&gt;</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/h1_multiple+meta_noindex/canonical_next_block/">http://crawlbin.com/h1_multiple+meta_noindex/canonical_next_block/</a>
+						<span class="note">Link: &lt;http://crawlbin.com/h1_multiple+meta_noindex/&gt;; rel="canonical"</span>
+						<span class="note">&lt;link rel="canonical" href="http://crawlbin.com/h1_multiple+meta_noindex/" /&gt;</span>
+					</span>
+
+					<p>You can also specify whether you want just an HTTP header or just an HTML directive:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/header_canonical_home/">http://crawlbin.com/header_canonical_home/</a>
+						<span class="note">Link: &lt;http://crawlbin.com/&gt;; rel="canonical"</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/html_canonical_home/">http://crawlbin.com/html_canonical_home/</a>
+						<span class="note">&lt;link rel="canonical" href="http://crawlbin.com/" /&gt;</span>
+					</span>
+
+					<p>And it is permitted to combine these with conflicting values:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/h1_multiple+meta_noindex/html_canonical_next_block+header_canonical_self/">http://crawlbin.com/h1_multiple+meta_noindex/html_canonical_next_block+header_canonical_self/</a>
+						<span class="note">Link: &lt;http://crawlbin.com/h1_multiple+meta_noindex/html_canonical_next_block+header_canonical_self/&gt;; rel="canonical"</span>
+						<span class="note">&lt;link rel="canonical" href="http://crawlbin.com/h1_multiple+meta_noindex/" /&gt;</span>
+					</span>
+
+					<h4><a name="vary_header"></a>Vary HTTP header</h4>
+
+					<p>There are various allowed values for the Vary HTTP header:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/vary_accept_encoding/">http://crawlbin.com/vary_accept_encoding/</a>
+						<span class="note">Vary: Accept-Encoding</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/vary_user_agent/">http://crawlbin.com/vary_user_agent/</a>
+						<span class="note">Vary: User-Agent</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/vary_cookie/">http://crawlbin.com/vary_cookie/</a>
+						<span class="note">Vary: Cookie</span>
+					</span>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/vary_referer/">http://crawlbin.com/vary_referer/</a>
+						<span class="note">Vary: Referer</span>
+					</span>
+
+					<p>You may join multiple values:</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/vary_user_agent+vary_cookie/">http://crawlbin.com/vary_user_agent+vary_cookie/</a>
+						<span class="note">Vary: User-Agent, Cookie</span>
+					</span>
+
+
+						
+					<!-- Random Section -->
+
+					<h3><a name="random"></a>Randomised responses</h3>
+
+					<p>It is possible to supply multiple, alternative, blocks of flags which are selected at random, such that responses are less predictable. Each block must be surounded by square brackets: <span class="crawlbin_directive">[]</span> .</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/[meta_noindex+vary_cookie][response_404]/">http://crawlbin.com/[meta_noindex+vary_cookie][response_404]/</a>
+						<span class="note">Vary: Cookie</span>
+						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
+						OR
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+
+					</span>
+
+					<p>You can supply as many of these alternative blocks as you wish between any two <span class="crawlbin_directive">/</span> separated blocks.</p>
+					
+					<p>Furthermore, there is a single level of nesting that is possible with randomisation. In this case nested sets of <span class="crawlbin_directive">[]</span> are used and the flags must be comma separated.</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/[meta_noindex+[vary_cookie,vary_referer]][response_404]/">http://crawlbin.com/[meta_noindex+[vary_cookie,vary_referer]][response_404]/</a>
+						<span class="note">Vary: Cookie</span>
+						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
+						OR
+						<span class="note">Vary: Referer</span>
+						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
+						OR
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+		
+					</span>
+
+					<p>This nesting allows for more complex sets of randomisation, but can also be combined with the user-agent targeting below.</p>
+
+
+
+
+					<!-- User-Agent Section -->
+
+					<h3><a name="user_agent"></a>User-agent determined responses</h3>
+
+					<p>It is possible to target different blocks of flags towards different devices or crawlers based upo their user agent. To do this you must enclose a block of flags in square brackets <span class="crawlbin_directive">[]</span>, as per above, and then prefix this block with a user agent flag and a <span class="crawlbin_directive">:</span>.</p>
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/[mobile:response_500][meta_noindex]/">http://crawlbin.com/[mobile:response_500][meta_noindex]/</a>
+						<br /><br />
+						<span>Mobile devices:</span>
+						<span class="note">HTTP Status: 500 (Internal Server Error)</span>
+						<br />
+						<span>Other devices:</span>
+						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
+		
+					</span>
+
+					<p>The list of user agent flags accepted and what they match to are:</p>
+
+					<ul>
+						<li><span class="crawlbin_directive">all</span> - All user agents.</li>
+						<li><span class="crawlbin_directive">bot</span> - Any bot.</li>
+						<li><span class="crawlbin_directive">googlebot</span> - Googlebot but not other bots.</li>
+						<li><span class="crawlbin_directive">desktop</span> - Any desktop browser.</li>
+						<li><span class="crawlbin_directive">mobile</span> - Any mobile browser.</li>
+						<li><span class="crawlbin_directive">tablet</span> - Any tablet browser.</li>
+						<li><span class="crawlbin_directive">ie</span> - Any version of Internet Explorer.</li>
+						<li><span class="crawlbin_directive">ff</span> - Any version of Firefox.</li>
+					</ul>
+
+					<p>When a request is made crawlbin will select all possible blocks which match the user-agent, and then select amongst them randomly in the same fashion as outlined above. A particular request might match against multiple user agent flags (for example <span class="crawlbin_directive">desktop</span> and <span class="crawlbin_directive">ie</span> flags may both be relevant and selected).</p>
+
+
+
+
+					<span class="crawlbin_url">
+						<a href="http://crawlbin.com/[all:response_404][mobile:response_500][desktop:meta_noindex]/">http://crawlbin.com/[all:response_404][mobile:response_500][desktop:meta_noindex]/</a>
+						<br /><br />
+						<span>Mobile devices:</span>
+						<span class="note">HTTP Status: 500 (Internal Server Error)</span>
+						OR
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+						<br />
+						<span>Desktop devices:</span>
+						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
+						OR
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+						<br />
+						<span>Other devices:</span>
+						<span class="note">HTTP Status: 404 (Not Found)</span>
+		
+					</span>
+
+
+					<!-- Delay/Timeout Section -->
+
+<!--           <h3><a name="delay"></a>Delay / timeout options</h3>
+
+					<p>NBED</p>
+
+					<h4><a name="NBED"></a>NBED</h4>
+
+					<p>NBED</p> -->
+
+
+					<!-- FAQ Section -->
+
+					<h3><a name="faq"></a>FAQ</h3>
+
+					<h4>Do you handle POST requests?</h4>
+
+					<p>Not currently.</p>
+
+					<h4>Do you handle HTTPS requests?</h4>
+
+					<p>Not currently.</p>
+
+
+				</div>
+			</div>
+
+			<hr>
+
+			<footer>
+				<p><img src="{% static 'favicon.ico' %}" />&nbsp; Built by <a href="https://www.distilled.net">Distilled R&amp;D</a></p>
+			</footer>
+		</div>
+
+	</body>
+</html>

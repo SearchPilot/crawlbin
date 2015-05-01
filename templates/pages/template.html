@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="NBED">
+		<meta name="author" content="Tom and Duncan - Distilled Labs">
+
+		<title>Crawlbin</title>
+		
+		<link rel="icon" href="/static/favicon.ico">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+		<link rel="stylesheet" href="/static/crawlbin.css">
+
+		{% if meta_follow_index_string %}
+		<meta name="robots" content="{{ meta_follow_index_string }}">
+		{% endif %}
+
+		{% if canonical_next_block %}
+		<link rel="canonical" href="{{canonical_next_block}}" />
+		{% endif %}
+
+		{% if canonical_random %}
+		<link rel="canonical" href="{{canonical_random}}" />
+		{% endif %}
+
+		{% if canonical_self %}
+		<link rel="canonical" href="{{canonical_self}}" />
+		{% endif %}
+
+		{% if canonical_home %}
+		<link rel="canonical" href="{{canonical_home}}" />
+		{% endif %}
+
+	</head>
+	<body>
+
+		<nav class="navbar navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/">crawlbin</a>
+				</div>
+			</div>
+		</nav>
+
+	<div class="container main clearfix">
+		<div class="row">
+			<div class="col-md-12">
+
+				{% if h1 != "off" %}
+				<h1>crawlbin: </h1>
+					{% if h1 == "multiple" %}
+						<h1>Another title</h1>
+					{% endif %}
+				{% endif %}
+
+				<h2 class='url'>/{{url}}/</h2>
+
+				<h3>Flags affecting this page: </h3>
+
+				{% for pattern in patterns %}
+				<span class="crawlbin_url">
+					<a href="/#{{pattern}}">{{pattern}}</a>
+				</span>
+				{% endfor %}
+
+				<h3>Headers sent with this response: </h3>
+
+				{% for key, value in headers.items %}
+				<span class="crawlbin_url">
+					<a href="/#{{key}}">{{key}}</a>: {{value}}
+				</span>
+				{% empty %}
+				<p>No headers sent</p>
+				{% endfor %}
+			</div>
+		</div>
+
+			<hr>
+			<footer>
+				<p><img src="/static/favicon.ico" />&nbsp; Built by <a href="https://www.distilled.net">Distilled R&D</a></p>
+			</footer>
+	</div>
+
+	</body>
+</html>

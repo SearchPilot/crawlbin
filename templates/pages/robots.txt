@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: *deny_all/$
+
+User-agent: Googlebot
+Disallow: *deny_googlebot/$

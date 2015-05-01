@@ -1,0 +1,6 @@
+Django==1.7.4
+MySQL-python==1.2.5
+argparse==1.2.1
+ua-parser==0.3.6
+user-agents==0.3.2
+wsgiref==0.1.2

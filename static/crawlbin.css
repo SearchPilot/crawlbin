@@ -1,0 +1,68 @@
+.navbar {
+    background-color: #eee;
+}
+
+.main {
+    margin-top: 50px;
+
+}
+
+.crawlbin_directive {
+    background-color: #eee;
+    color: #337ab7;
+    font-size: 1.1em;
+}
+.crawlbin_url {
+    font-size: 1.2em;
+    padding: 10px;
+    background-color: #eee;
+    width: 100%;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.second_url {
+    display: block;
+    padding-left: 20px;
+    margin-top: 20px;
+}
+.crawlbin_url a {
+    font-family: Courier;
+}
+a {
+    background-color: #eee;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.note {
+    display: block;
+    color: #666;
+    font-size: 0.8em;
+}
+
+ol {
+    font-size: 1.3em;
+}
+
+ol a {
+    padding: 5px;
+    width: 50%;
+    display: inline-block;
+}
+
+ol li {
+    margin: 5px;
+}
+
+h2.url {
+    word-wrap: break-word;
+    color: #aaa;
+    font-size: 1.8em;
+}
+
+h4 {
+    margin-top: 20px;
+}
