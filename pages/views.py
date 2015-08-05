@@ -10,6 +10,7 @@ from django.shortcuts import render
 from helpers_directive import canonical_directives
 from helpers_directive import delay_directives
 from helpers_directive import h1_directive
+from helpers_directive import title_tag_directive
 from helpers_directive import handle_redirect
 from helpers_directive import index_follow_directives
 from helpers_directive import vary_directives
@@ -78,6 +79,11 @@ def handle(request, url):
     h1_context, h1_headers = h1_directive(directives)
     context.update(h1_context)
     headers.update(h1_headers)
+
+    # handle title_tag directives
+    title_tag_context, title_tag_headers = title_tag_directive(directives)
+    context.update(title_tag_context)
+    headers.update(title_tag_headers)
 
     # handle index_follow directives
     index_follow_context, index_follow_headers = index_follow_directives(

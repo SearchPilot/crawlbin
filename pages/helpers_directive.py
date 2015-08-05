@@ -108,6 +108,25 @@ def h1_directive(directives):
     return {'h1': ''}, {}
 
 
+def title_tag_directive(directives):
+    """ Handle the title tag directive:
+
+    - random_title
+
+    Title is always 'Crawlbin' in the absence of a directive
+
+    """
+
+    titles = ['Crawlbin', 'Crawlbin Alternative']
+
+    choice = random.choice(titles)
+
+    if 'random_title' in directives:
+        return {'title': choice}, {}
+
+    return {'title': 'Crawlbin'}, {}
+
+
 def index_follow_directives(directives):
     """Handle the index / follow directives:
 
