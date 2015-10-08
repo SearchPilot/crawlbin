@@ -141,4 +141,8 @@ def handle(request, url):
     for header_key, header_val in headers.iteritems():
         response[header_key] = header_val
 
+    keen.add_event("crawlbin", {'directives': context['directives'], 
+        'headers': context['headers']})
+    keen.add_event("visit", {'page': url})
+
     return response
