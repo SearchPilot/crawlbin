@@ -14,9 +14,11 @@
 
 		<link rel="icon" href="/static/favicon.ico">
 
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
 	</head>
 	<body>
-		
+
 		<div class="jumbotron">
 			<div class="container">
 				<h1>crawlbin</h1>
@@ -29,7 +31,7 @@
 
 			<div class="row">
 				<div class="col-md-12">
-					
+
 					<h2>Introduction</h2>
 
 					<p>crawlbin accepts a list of flags in a URL which toggle various search engine directives and HTTP responses within the complete HTML page it returns. You can simulate a variety of issues which crawlers might encounter.</p>
@@ -64,9 +66,9 @@
 						<br />
 						<span>Other devices:</span>
 						<span class="note">HTTP Status: 404 (Not Found)</span>
-		
+
 					</span>
-					
+
 					<hr />
 					<h2>Table of Contents</h2>
 
@@ -338,7 +340,7 @@
 					</span>
 
 
-						
+
 					<!-- Random Section -->
 
 					<h3><a name="random"></a>Randomised responses</h3>
@@ -355,7 +357,7 @@
 					</span>
 
 					<p>You can supply as many of these alternative blocks as you wish between any two <span class="crawlbin_directive">/</span> separated blocks.</p>
-					
+
 					<p>Furthermore, there is a single level of nesting that is possible with randomisation. In this case nested sets of <span class="crawlbin_directive">[]</span> are used and the flags must be comma separated.</p>
 
 					<span class="crawlbin_url">
@@ -367,7 +369,7 @@
 						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
 						OR
 						<span class="note">HTTP Status: 404 (Not Found)</span>
-		
+
 					</span>
 
 					<p>This nesting allows for more complex sets of randomisation, but can also be combined with the user-agent targeting below.</p>
@@ -389,7 +391,7 @@
 						<br />
 						<span>Other devices:</span>
 						<span class="note">&lt;meta name="robots" content="noindex" /&gt;</span>
-		
+
 					</span>
 
 					<p>The list of user agent flags accepted and what they match to are:</p>
@@ -425,7 +427,7 @@
 						<br />
 						<span>Other devices:</span>
 						<span class="note">HTTP Status: 404 (Not Found)</span>
-		
+
 					</span>
 
 
@@ -459,8 +461,18 @@
 			<hr>
 
 			<footer>
-				<p><img src="{% static 'favicon.ico' %}" />&nbsp; Built by <a href="https://www.distilled.net">Distilled R&amp;D</a></p>
+				<p><img src="{% static 'favicon.ico' %}" />&nbsp; Built by <a href="https://www.distilled.net" id="distilledLink">Distilled R&amp;D</a></p>
 			</footer>
+			<script type="text/javascript">
+				$('#distilledLink').click(keenioPost);
+				function keenioPost(e) {
+					e.preventDefault();
+					var link = $(this)
+					var href = link.attr('href')
+					var url = "{{ keeniod_url | safe }}" + href
+					window.location.href=url
+				}
+			</script>
 		</div>
 
 	</body>
