@@ -18,6 +18,7 @@ from helpers_directive import vary_directives
 from helpers_url import get_directives_from_random_matching_block
 
 from keen.client import KeenClient
+from keen import scoped_keys
 
 logger = logging.getLogger('crawlbin.pages.views')
 
@@ -28,13 +29,28 @@ keen = KeenClient(
     master_key=settings.KEEN_MASTER_KEY,
 )
 
+scoped_write_key = scoped_keys.encrypt(settings.KEEN_MASTER_KEY, {"allowed_operations": ["write"]})
+keeniod_url = "https://api.keen.io/3.0/projects/"+settings.KEEN_PROJECT_ID+\
+"/events/distilled_link_clicked?api_key="+scoped_write_key+"&data=e30=&redirect="
+
 
 def index(request):
     """ Render the crawlbin index page.
 
     """
-    keen.add_event("visit", {'page': 'index.html'})
-    return render(request, 'pages/index.html', )
+    keen.add_event("visit",
+        {'page': 'index.html',
+        "ip_address": "${keen.ip}",
+            "keen": {
+            "addons": [{
+                "name": "keen:ip_to_geo",
+                "input": {"ip": "ip_address"},
+                "output":"ip_geo_info"
+                }]
+            },
+        "user_agent": "${keen.user_agent}",
+        "referral_url": request.META.get('HTTP_REFERER', '/')})
+    return render(request, 'pages/index.html', {'keeniod_url': keeniod_url})
 
 
 def robots(request):
@@ -131,6 +147,8 @@ def handle(request, url):
     context.update(response_context)
     headers.update(response_headers)
 
+    context['keeniod_url'] = keeniod_url
+
     response = render(
         request,
         "pages/template.html",
@@ -141,8 +159,19 @@ def handle(request, url):
     for header_key, header_val in headers.iteritems():
         response[header_key] = header_val
 
-    keen.add_event("crawlbin", {'directives': context['directives'], 
+    keen.add_event("crawlbin", {'directives': context['directives'],
         'headers': context['headers']})
-    keen.add_event("visit", {'page': url})
+    keen.add_event("visit",
+        {'page': url,
+        "ip_address": "${keen.ip}",
+            "keen": {
+            "addons": [{
+                "name": "keen:ip_to_geo",
+                "input": {"ip": "ip_address"},
+                "output":"ip_geo_info"
+                }]
+            },
+        "user_agent": "${keen.user_agent}",
+        "referral_url": request.META.get('HTTP_REFERER', '/')})
 
     return response

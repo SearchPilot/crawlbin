@@ -6,12 +6,14 @@
 		<meta name="author" content="Tom and Duncan - Distilled Labs">
 
 		<title>{{title}}</title>
-		
+
 		<link rel="icon" href="/static/favicon.ico">
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
 		<link rel="stylesheet" href="/static/crawlbin.css">
+
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
 		{% if meta_follow_index_string %}
 		<meta name="robots" content="{{ meta_follow_index_string }}">
@@ -79,8 +81,18 @@
 
 			<hr>
 			<footer>
-				<p><img src="/static/favicon.ico" />&nbsp; Built by <a href="https://www.distilled.net">Distilled R&D</a></p>
+				<p><img src="/static/favicon.ico" />&nbsp; Built by <a href="https://www.distilled.net" id="distilledLink">Distilled R&D</a></p>
 			</footer>
+			<script type="text/javascript">
+				$('#distilledLink').click(keenioPost);
+				function keenioPost(e) {
+					e.preventDefault();
+					var link = $(this)
+					var href = link.attr('href')
+					var url = "{{ keeniod_url | safe }}" + href
+					window.location.href=url
+				}
+			</script>
 	</div>
 
 	</body>
