@@ -4,6 +4,7 @@
 # you may not use this file except in compliance with the License.
 
 import logging
+import tldextract
 
 from django.shortcuts import render
 from django.conf import settings
@@ -49,6 +50,7 @@ def index(request):
                 }]
             },
         "user_agent": "${keen.user_agent}",
+        "referral_domain": '.'.join(tldextract.extract(request.META.get('HTTP_REFERER', '/'))[1:]),
         "referral_url": request.META.get('HTTP_REFERER', '/')})
     return render(request, 'pages/index.html', {'keeniod_url': keeniod_url})
 
@@ -172,6 +174,7 @@ def handle(request, url):
                 }]
             },
         "user_agent": "${keen.user_agent}",
+        "referral_domain": '.'.join(tldextract.extract(request.META.get('HTTP_REFERER', '/'))[1:]),
         "referral_url": request.META.get('HTTP_REFERER', '/')})
 
     return response

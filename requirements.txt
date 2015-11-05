@@ -4,6 +4,7 @@ MySQL-python==1.2.5
 Padding==0.4
 pycrypto==2.6.1
 requests==2.8.0
+tldextract==1.7.1
 ua-parser==0.3.6
 user-agents==0.3.2
 wheel==0.24.0
