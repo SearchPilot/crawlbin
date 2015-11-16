@@ -109,3 +109,8 @@ LOGGING = {
         },
     }
 }
+
+KEEN_PROJECT_ID = ''
+KEEN_WRITE_KEY = ''
+KEEN_READ_KEY = ''
+KEEN_MASTER_KEY = ''
